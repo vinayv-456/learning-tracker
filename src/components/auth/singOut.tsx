@@ -24,7 +24,7 @@ export const SignOutButton = () => {
 
   return (
     <div className="ml-auto" title="Sign Out">
-      <div onClick={() => handleLogout("popup")}>Sign out using Popup</div>
+      <div onClick={() => handleLogout("popup")}>Sign out</div>
       {/* <div onClick={() => handleLogout("redirect")}>
         Sign out using Redirect
       </div> */}

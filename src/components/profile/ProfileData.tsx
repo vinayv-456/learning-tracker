@@ -6,6 +6,7 @@ import { useMsal } from "@azure/msal-react";
 import React, { useState } from "react";
 import WebService from "../../apiService/webservice";
 import { baseEndPoint, endPoints } from "../../apiService/endpoints";
+import { ProfileDataType } from "../../types";
 
 export const ProfileContent = () => {
   const { instance, accounts } = useMsal();
@@ -36,7 +37,7 @@ export const ProfileContent = () => {
 };
 
 interface Props {
-  graphData: ProfileData;
+  graphData: ProfileDataType;
 }
 
 export const ProfileData: React.FC<Props> = (props) => {

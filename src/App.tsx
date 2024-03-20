@@ -7,26 +7,28 @@ import {
   useMsal,
 } from "@azure/msal-react";
 import { SignOutButton } from "./components/auth/singOut";
-import { SignInButton } from "./components/auth/signIn";
-import { ProfileContent, ProfileData } from "./components/profile/ProfileData";
+import { SignIn } from "./components/auth/signIn";
+import { ProfileContent } from "./components/profile/ProfileData";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import CalendarList from "./components/Calendar/List";
 
 function App() {
-  const isAuthenticated = useIsAuthenticated();
-  console.log("aa", process.env.TENANT_ID);
+  // const isAuthenticated = useIsAuthenticated();
   return (
     <div className="App">
-      {/* header */}
-      {isAuthenticated ? <SignOutButton /> : <SignInButton />}
-
-      {/* body */}
-      <AuthenticatedTemplate>
-        <ProfileContent />
-      </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
-        <h5>
-          <center>Please sign-in to see your profile information.</center>
-        </h5>
+        <SignIn />
       </UnauthenticatedTemplate>
+      <AuthenticatedTemplate>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<ProfileContent />} />
+            <Route path="/calendar" element={<CalendarList />} />
+            {/* <Route path="*" element={<NoMatch />} /> */}
+          </Route>
+        </Routes>
+      </AuthenticatedTemplate>
     </div>
   );
 }
