@@ -6,12 +6,12 @@ import {
   useIsAuthenticated,
   useMsal,
 } from "@azure/msal-react";
-import { SignOutButton } from "./components/auth/singOut";
-import { SignIn } from "./components/auth/signIn";
-import { ProfileContent } from "./components/profile/ProfileData";
+import { SignOutButton } from "./containers/auth/singOut";
+import { SignIn } from "./containers/auth/signIn";
+import { ProfileContent } from "./containers/profile/ProfileData";
 import { Route, Routes } from "react-router-dom";
-import Layout from "./components/Layout";
-import CalendarList from "./components/Calendar/List";
+import Layout from "./containers/Layout";
+import CalendarList from "./containers/Calendar/List";
 
 function App() {
   // const isAuthenticated = useIsAuthenticated();
