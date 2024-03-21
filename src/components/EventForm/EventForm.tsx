@@ -3,6 +3,9 @@ import CascadingMenu, { CascadingMenuRef } from "../cascadingMenu/src";
 import { MenuGroup } from "../cascadingMenu/src/types";
 import TimeInput from "../DurationInput/DurationInput";
 import { Duration } from "../../types";
+import WebService from "../../apiService/webservice";
+import { endPoints } from "../../apiService/endpoints";
+import { formatEventPayload } from "./utility";
 
 interface Props {
   menuGroup: MenuGroup;
@@ -39,14 +42,25 @@ function EventForm(props: Props) {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("form input", {
+    const payload = {
       duration,
       selectedDate,
       description,
       satisfaction,
-      selection: menuRef.current?.getSelection(),
-    });
+      selections: menuRef.current?.getAllItemsSelected(),
+    };
+    const formatedPayload = formatEventPayload(payload);
+    console.log("form input", payload);
+    // TODO: replace with actual calendar_id
+    WebService.post(
+      endPoints.addEventInCalendar.replace(
+        "{{calendar_id}}",
+        "AAMkAGFlZjEyNTg2LWFhYTYtNDBjOS1iNTM1LWFhOTQyZDg2ODNhNgBGAAAAAAAlhGK5jiP6QZQ-4kVzTS4kBwA99KSiQ4OOSKOI6W9lbhWIAAAAAAEGAAA99KSiQ4OOSKOI6W9lbhWIAAD9CXegAAA="
+      ),
+      formatedPayload
+    );
   };
+
   return (
     <form onSubmit={handleFormSubmit}>
       <span>Event Form</span>
