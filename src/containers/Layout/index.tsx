@@ -13,6 +13,7 @@ function Layout(props: Props) {
       <div>
         <Link to="/">profile</Link>
         <Link to="/calendar">calendar</Link>
+        <Link to="/add-event">add event</Link>
       </div>
       <Outlet />
     </div>

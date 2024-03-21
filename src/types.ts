@@ -30,3 +30,8 @@ export type Name = string;
 export interface EventListEntries {
   [name: string]: EventItem[];
 }
+
+export interface Duration {
+  hours: number;
+  minutes: number;
+}

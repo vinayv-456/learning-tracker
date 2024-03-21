@@ -12,6 +12,7 @@ import { ProfileContent } from "./containers/profile/ProfileData";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./containers/Layout";
 import CalendarList from "./containers/Calendar/List";
+import EventForm from "./containers/AddEventForm/AddEventForm";
 
 function App() {
   // const isAuthenticated = useIsAuthenticated();
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<ProfileContent />} />
             <Route path="/calendar" element={<CalendarList />} />
+            <Route path="/add-event" element={<EventForm />} />
             {/* <Route path="*" element={<NoMatch />} /> */}
           </Route>
         </Routes>

@@ -16,12 +16,6 @@ export interface ClassNames {
 
 export type Item = ItemObj | string | any; // any - as item can any number of key-value pairs
 
-// export interface MenuGroupItem {
-//   id: ItemId;
-//   label: string;
-//   value: string;
-//   groupHeading?: string;
-// }
 export interface MenuGroup {
   id: ItemId;
   label: string;
@@ -65,10 +59,6 @@ export interface SelectedItemType {
   [grpHeading: string]: {
     [id: ItemId]: SelectedItemTypeVal;
   };
-}
-
-export interface Ref {
-  test: () => void;
 }
 
 export interface Props {
