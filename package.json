@@ -8,9 +8,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@types/react-dom": "^18.2.22",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "@azure/msal-browser": "^3.10.0",
+    "@azure/msal-react": "^2.0.12",
+    "axios": "^1.6.8",
+    "dotenv-webpack": "^8.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
@@ -25,6 +28,7 @@
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-react": "^7.16.5",
     "@types/estree": "^1.0.5",
+    "@types/react-dom": "^18.2.22",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.10.0",
     "style-loader": "^3.3.4",
