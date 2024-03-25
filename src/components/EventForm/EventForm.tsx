@@ -74,7 +74,6 @@ function EventForm(props: Props) {
         isMultiSelection={true}
         displayValue="label"
       />
-      <label htmlFor="label">Duration:</label>
       <TimeInput duration={duration} getDuration={getDuration} />
       <label htmlFor="label">Satisfaction:</label>
       <input
@@ -82,6 +81,7 @@ function EventForm(props: Props) {
         value={satisfaction.toString()}
         onChange={handleSatisfactionChange}
       />
+      <br />
       <label htmlFor="label">Select a date:</label>
       <input
         type="date"
@@ -89,6 +89,7 @@ function EventForm(props: Props) {
         value={selectedDate}
         onChange={handleDateChange}
       />
+      <br />
       <label htmlFor="label">Description:</label>
       <input type="text" value={description} onChange={handleChange} />
       <button type="submit">Submit</button>

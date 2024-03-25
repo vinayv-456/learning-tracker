@@ -30,6 +30,7 @@ const TimeInput: React.FC<Props> = (props) => {
 
   return (
     <div>
+      <label htmlFor="label">Duration:</label>
       <input
         type="text"
         value={hours}
