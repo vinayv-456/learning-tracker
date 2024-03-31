@@ -5,7 +5,7 @@ interface EventRawPayload {
   selectedDate: string;
   description: string;
   satisfaction: Number;
-  selections: string[] | undefined;
+  selections: string[][] | undefined;
 }
 export const formatEventPayload = (eventPayload: EventRawPayload) => {
   const { duration, selectedDate, description, satisfaction, selections } =
@@ -18,7 +18,6 @@ export const formatEventPayload = (eventPayload: EventRawPayload) => {
       content: description,
     },
     locations: selections?.map((e) => ({ displayName: e })),
-
     start: {
       dateTime: selectedDate,
       timeZone: "Eastern Standard Time",

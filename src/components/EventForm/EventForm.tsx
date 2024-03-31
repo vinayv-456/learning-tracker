@@ -2,17 +2,21 @@ import React, { useRef, useState, ChangeEvent } from "react";
 import CascadingMenu, { CascadingMenuRef } from "../cascadingMenu/src";
 import { MenuGroup } from "../cascadingMenu/src/types";
 import TimeInput from "../DurationInput/DurationInput";
-import { Duration } from "../../types";
+import { Duration, formPayload } from "../../types";
 import WebService from "../../apiService/webservice";
 import { endPoints } from "../../apiService/endpoints";
 import { formatEventPayload } from "./utility";
 
 interface Props {
   menuGroup: MenuGroup;
+  handleFormSubmission: (
+    e: React.FormEvent<HTMLFormElement>,
+    payload: formPayload
+  ) => void;
 }
 
 function EventForm(props: Props) {
-  const { menuGroup } = props;
+  const { menuGroup, handleFormSubmission } = props;
   const menuRef = useRef<CascadingMenuRef>(null);
   const [satisfaction, setSatisfaction] = useState<Number>(0);
   const [duration, setDuration] = useState<Duration>({ hours: 0, minutes: 0 });
@@ -41,24 +45,27 @@ function EventForm(props: Props) {
   };
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const payload = {
+    const calendars = menuRef.current
+      ?.getSelection()
+      ?.reduce((acc: string[], e: {} | { value: string }) => {
+        if (Object.keys(e).length) {
+          if ("value" in e && e?.value) {
+            return [...acc, e.value || ""];
+          }
+        }
+        return acc;
+      }, []);
+
+    console.log("aa", menuRef.current?.getSelection());
+
+    handleFormSubmission(e, {
       duration,
       selectedDate,
       description,
       satisfaction,
       selections: menuRef.current?.getAllItemsSelected(),
-    };
-    const formatedPayload = formatEventPayload(payload);
-    console.log("form input", payload);
-    // TODO: replace with actual calendar_id
-    WebService.post(
-      endPoints.addEventInCalendar.replace(
-        "{{calendar_id}}",
-        "AAMkAGFlZjEyNTg2LWFhYTYtNDBjOS1iNTM1LWFhOTQyZDg2ODNhNgBGAAAAAAAlhGK5jiP6QZQ-4kVzTS4kBwA99KSiQ4OOSKOI6W9lbhWIAAAAAAEGAAA99KSiQ4OOSKOI6W9lbhWIAAD9CXegAAA="
-      ),
-      formatedPayload
-    );
+      calendars,
+    });
   };
 
   return (

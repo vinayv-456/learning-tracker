@@ -35,3 +35,12 @@ export interface Duration {
   hours: number;
   minutes: number;
 }
+
+export interface formPayload {
+  duration: Duration;
+  selectedDate: string;
+  description: string;
+  satisfaction: Number;
+  selections: string[][] | undefined;
+  calendars: string[] | undefined;
+}
