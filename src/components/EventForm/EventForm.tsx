@@ -1,13 +1,13 @@
 import React, { useRef, useState, ChangeEvent } from "react";
-import CascadingMenu, { CascadingMenuRef } from "../cascadingMenu/src";
-import { MenuGroup } from "../cascadingMenu/src/types";
 import TimeInput from "../DurationInput/DurationInput";
 import { Duration, formPayload } from "../../types";
 import WebService from "../../apiService/webservice";
 import { endPoints } from "../../apiService/endpoints";
 import { formatEventPayload } from "./utility";
+import CascadingMenu, { CascadingMenuRef } from "react-cascading-menu";
+import { MenuGroup } from "react-cascading-menu/build/types";
 
-interface Props {
+interface EventProps {
   menuGroup: MenuGroup;
   handleFormSubmission: (
     e: React.FormEvent<HTMLFormElement>,
@@ -15,7 +15,7 @@ interface Props {
   ) => void;
 }
 
-function EventForm(props: Props) {
+function EventForm(props: EventProps) {
   const { menuGroup, handleFormSubmission } = props;
   const menuRef = useRef<CascadingMenuRef>(null);
   const [satisfaction, setSatisfaction] = useState<Number>(0);
@@ -72,15 +72,7 @@ function EventForm(props: Props) {
     <form onSubmit={handleFormSubmit}>
       <span>Event Form</span>
       <label htmlFor="label">Menu:</label>
-      <CascadingMenu
-        ref={menuRef}
-        isObject={true}
-        emptyRecordMsg="No items"
-        selectionLimit={10}
-        menuGroup={menuGroup}
-        isMultiSelection={true}
-        displayValue="label"
-      />
+      <CascadingMenu ref={menuRef} menuGroup={menuGroup} displayValue="label" />
       <TimeInput duration={duration} getDuration={getDuration} />
       <label htmlFor="label">Satisfaction:</label>
       <input

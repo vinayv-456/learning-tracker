@@ -4,9 +4,9 @@ import Layout from "./Layout";
 import { ProfileContent } from "./profile/ProfileData";
 import CalendarList from "./Calendar/List";
 import EventForm from "../components/EventForm/EventForm";
-import { menuGroup } from "../components/cascadingMenu/constants";
 import { fetchCalendarList } from "../apiService/calendarApis";
 import { ACTION_TYPES, useGlobalDispatch, useGlobalState } from "../appContext";
+import { menuGroup } from "./AddEventForm/data";
 
 interface Props {}
 function Router(props: Props) {
@@ -22,7 +22,7 @@ function Router(props: Props) {
         console.log(err);
       });
   }, []);
-  // console.log("res", state);
+  console.log("res", state);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
