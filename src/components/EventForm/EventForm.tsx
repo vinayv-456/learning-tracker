@@ -5,7 +5,10 @@ import WebService from "../../apiService/webservice";
 import { endPoints } from "../../apiService/endpoints";
 import { formatEventPayload } from "./utility";
 import CascadingMenu, { CascadingMenuRef } from "react-cascading-menu";
-import { MenuGroup } from "react-cascading-menu/build/types";
+import {
+  FormatedSelections,
+  MenuGroup,
+} from "react-cascading-menu/build/types";
 
 interface EventProps {
   menuGroup: MenuGroup;
@@ -45,26 +48,19 @@ function EventForm(props: EventProps) {
   };
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const calendars = menuRef.current
-      ?.getSelection()
-      ?.reduce((acc: string[], e: {} | { value: string }) => {
-        if (Object.keys(e).length) {
-          if ("value" in e && e?.value) {
-            return [...acc, e.value || ""];
-          }
-        }
-        return acc;
-      }, []);
-
-    console.log("aa", menuRef.current?.getSelection());
-
     handleFormSubmission(e, {
       duration,
       selectedDate,
       description,
       satisfaction,
       selections: menuRef.current?.getAllItemsSelected(),
-      calendars,
+      calendars:
+        menuRef.current?.getSelection().map((e: FormatedSelections | {}) => {
+          if ("value" in e) {
+            return e?.value;
+          }
+          return "";
+        }) || [],
     });
   };
 

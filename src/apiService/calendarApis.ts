@@ -6,10 +6,14 @@ export const fetchCalendarList = async () => {
   try {
     const res = await WebService.get(endPoints.listCalendars);
     console.log("profile res", res);
-    const formatedVal = res.data?.value.map((e: CalendarItem) => {
-      const { id, name, hexColor } = e;
-      return { id, name, hexColor };
-    });
+    const formatedVal = res.data?.value.reduce(
+      (acc: Object, e: CalendarItem) => {
+        const { id, name, hexColor } = e;
+        // { id, name, hexColor };
+        return { ...acc, [name]: id };
+      },
+      {}
+    );
     return formatedVal;
   } catch (e) {
     console.log("error in fetching calendar list", e);

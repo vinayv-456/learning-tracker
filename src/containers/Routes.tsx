@@ -6,7 +6,8 @@ import CalendarList from "./Calendar/List";
 import EventForm from "../components/EventForm/EventForm";
 import { fetchCalendarList } from "../apiService/calendarApis";
 import { ACTION_TYPES, useGlobalDispatch, useGlobalState } from "../appContext";
-import { menuGroup } from "./AddEventForm/data";
+import { menuGroup } from "../data";
+import AddEventForm from "./AddEventForm/AddEventForm";
 
 interface Props {}
 function Router(props: Props) {
@@ -22,18 +23,13 @@ function Router(props: Props) {
         console.log(err);
       });
   }, []);
-  console.log("res", state);
+  console.log("res=", state);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<ProfileContent />} />
         <Route path="/calendar" element={<CalendarList />} />
-        <Route
-          path="/add-event"
-          element={
-            <EventForm menuGroup={menuGroup} handleFormSubmission={() => {}} />
-          }
-        />
+        <Route path="/add-event" element={<AddEventForm />} />
         {/* <Route path="*" element={<NoMatch />} /> */}
       </Route>
     </Routes>

@@ -42,5 +42,5 @@ export interface formPayload {
   description: string;
   satisfaction: Number;
   selections: string[][] | undefined;
-  calendars: string[] | undefined;
+  calendars: string[];
 }
