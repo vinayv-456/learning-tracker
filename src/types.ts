@@ -22,6 +22,9 @@ export interface EventItem {
     contentType: string;
     content: string;
   };
+  location: {
+    displayName: string;
+  };
   start: Date;
   end: Date;
 }
