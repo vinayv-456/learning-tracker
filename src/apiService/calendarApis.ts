@@ -1,3 +1,4 @@
+import { FormatedSelections } from "react-cascading-menu/build/types";
 import { CalendarItem, EventItem } from "../types";
 import { endPoints } from "./endpoints";
 import WebService from "./webservice";
@@ -20,40 +21,56 @@ export const fetchCalendarList = async () => {
   }
 };
 
-export async function getAllCalendarEvents(calendarList: CalendarItem[]) {
+export async function getSelectedCalendarEvents(
+  calendarList: string[],
+  selections: (FormatedSelections | {})[]
+) {
   // Map calendar requests to promises
   const eventRequests = Promise.all(
-    calendarList.map(async (calendar) => {
-      const { id, name } = calendar;
-      const endpoint = endPoints.listEventsInCalendar.replace(
-        "{{calendar}}",
-        id
-      );
-      console.log("endpoint", endpoint);
+    calendarList.map(async (calendar, index) => {
+      const selection = selections[index];
+      if (typeof selection === "object" && "label" in selection) {
+        const endpoint = endPoints.listEventsInCalendar.replace(
+          "{{calendar}}",
+          calendar
+        );
+        const eventsResponse = await WebService.get(endpoint);
+        const events = eventsResponse.data?.value;
 
-      const eventsResponse = await WebService.get(endpoint);
-      const events = eventsResponse.data?.value;
-      return {
-        [name]: events.map((event: EventItem) => ({
-          subject: event.subject,
-          bodyPreview: event.bodyPreview,
-          body: event.body,
-          start: event.start,
-          end: event.end,
-        })),
-      };
-    })
+        return events.map((event: EventItem) => {
+          const {
+            subject,
+            body,
+            start,
+            end,
+            bodyPreview,
+            location: { displayName },
+          } = event;
+          return {
+            subject: subject,
+            bodyPreview: bodyPreview,
+            body: body,
+            displayName,
+            start: start,
+            end: end,
+          };
+        });
+      }
+      return {};
+    }, {})
   );
 
   // Wait for all promises to resolve
   const eventResults = await eventRequests;
-  console.log("eventResults", eventResults);
 
   // Combine results into a single object
-  const allEvents = eventResults.reduce(
-    (acc, curr) => ({ ...acc, ...curr }),
-    {}
-  );
+  const allEvents = eventResults.reduce((acc, curr, index) => {
+    const selection = selections[index];
+    if (typeof selection === "object" && "label" in selection) {
+      return { ...acc, [selection.label]: curr };
+    }
+    return acc;
+  }, {});
 
   return allEvents;
 }
