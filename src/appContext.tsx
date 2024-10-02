@@ -1,17 +1,17 @@
 import React, { ReactNode } from "react";
 import { createContext, useContext, useReducer } from "react";
 
-interface Obj {
+export interface Obj {
   [key: string]: string;
 }
 
 interface State {
-  [key: string]: string | Obj;
+  [key: string]: string | boolean;
 }
 
 interface Action {
   type: string;
-  payload: { [key: string]: string };
+  payload: { [key: string]: string | boolean };
 }
 
 const StateContext = createContext<State | undefined>(undefined);
@@ -22,7 +22,9 @@ const DispatchContext = createContext<React.Dispatch<Action> | undefined>(
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case ACTION_TYPES.FETCH_CALENDAR_LIST:
-      return { ...state, calendars: action.payload };
+      return { ...state, calendars: action.payload.calendars };
+    case ACTION_TYPES.LOADING:
+      return { ...state, loading: action.payload.loading };
     default:
       return state;
   }
@@ -60,4 +62,5 @@ export const useGlobalDispatch = () => {
 
 export const ACTION_TYPES = {
   FETCH_CALENDAR_LIST: "FETCH_CALENDAR_LIST",
+  LOADING: "LOADING",
 };

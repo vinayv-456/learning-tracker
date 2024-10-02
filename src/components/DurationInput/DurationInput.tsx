@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, forwardRef } from "react";
+import React, { useState, ChangeEvent, forwardRef, useEffect } from "react";
 import { Duration } from "../../types";
 interface Props {
   duration: Duration;
@@ -9,6 +9,15 @@ const TimeInput: React.FC<Props> = (props) => {
   const { duration, getDuration } = props;
   const [hours, setHours] = useState<string>(duration.hours.toString());
   const [minutes, setMinutes] = useState<string>(duration.minutes.toString());
+
+  useEffect(() => {
+    if (duration) {
+      console.log("durat", duration);
+
+      setHours(duration.hours.toString());
+      setMinutes(duration.minutes.toString());
+    }
+  }, [duration]);
 
   const handleHoursChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value: string = event.target.value;

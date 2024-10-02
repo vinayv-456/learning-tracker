@@ -8,7 +8,6 @@ import { ACTION_TYPES, useGlobalDispatch, useGlobalState } from "../appContext";
 import { menuGroup } from "../data";
 import AddEventForm from "./AddEventForm/AddEventForm";
 import Calendar from "./Calendar";
-
 interface Props {}
 function Router(props: Props) {
   const state = useGlobalState();
@@ -17,7 +16,10 @@ function Router(props: Props) {
   useEffect(() => {
     fetchCalendarList()
       .then((res) => {
-        dispatch({ type: ACTION_TYPES.FETCH_CALENDAR_LIST, payload: res });
+        dispatch({
+          type: ACTION_TYPES.FETCH_CALENDAR_LIST,
+          payload: { calendars: res },
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -25,15 +27,17 @@ function Router(props: Props) {
   }, []);
   console.log("res=", state);
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        {/* <Route path="/" element={<Calendar />}> */}
-        <Route index element={<ProfileContent />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/add-event" element={<AddEventForm />} />
-        {/* <Route path="*" element={<NoMatch />} /> */}
-      </Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {/* <Route path="/" element={<Calendar />}> */}
+          <Route index element={<ProfileContent />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/add-event" element={<AddEventForm />} />
+          {/* <Route path="*" element={<NoMatch />} /> */}
+        </Route>
+      </Routes>
+    </>
   );
 }
 

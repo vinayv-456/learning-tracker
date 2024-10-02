@@ -16,6 +16,7 @@ interface Date {
   timeZone: "string";
 }
 export interface EventItem {
+  id: string;
   subject: string;
   bodyPreview: string;
   body: {
@@ -32,6 +33,24 @@ export interface EventItem {
 export type Name = string;
 export interface EventListEntries {
   [name: string]: EventItem[];
+}
+
+export interface ParsedEventItem {
+  title: string;
+  start: string;
+  timeSpent: string;
+  description: string;
+  calendar: string;
+  eventId?: string;
+}
+
+export interface ParsedEventListEntries {
+  [name: string]: ParsedEventItem[];
+}
+
+export interface EventsHeaderItem {
+  label: string;
+  value: "title" | "start" | "timeSpent" | "description" | "calendar";
 }
 
 export interface Duration {
