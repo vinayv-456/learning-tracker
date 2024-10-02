@@ -1,11 +1,21 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Table from "../../components/Table/Table";
 import Modal from "../../components/Modal";
 import CascadingMenu, { CascadingMenuRef } from "react-cascading-menu";
 import { menuGroup } from "../../data";
 import { FormatedSelections } from "react-cascading-menu/build/types";
 import { getSelectedCalendarEvents } from "../../apiService/calendarApis";
-import { useGlobalState } from "../../appContext";
+import {
+  ACTION_TYPES,
+  useGlobalDispatch,
+  useGlobalState,
+} from "../../appContext";
+import CalendarEventsList from "../../components/CalendarEventsList/CalendarEventsList.view";
+import {
+  EventItem,
+  EventListEntries,
+  ParsedEventListEntries,
+} from "../../types";
 interface Props {}
 
 function Index(props: Props) {
@@ -14,28 +24,45 @@ function Index(props: Props) {
   const [showModal, setShowModal] = useState(false);
   const [selections, setSelections] = useState<(FormatedSelections | {})[]>([]);
   const { calendars } = useGlobalState();
+  const [calendarEvents, setCalendarEvents] = useState<ParsedEventListEntries>(
+    {}
+  );
   const ref = useRef<CascadingMenuRef>(null);
+
+  const dispatch = useGlobalDispatch();
 
   const handlecloseModal = () => {
     setShowModal(false);
   };
+  const fetchEvents = async () => {
+    dispatch({ type: ACTION_TYPES.LOADING, payload: { loading: true } });
+
+    const calendarEventsRes = await getSelectedCalendarEvents(
+      selections.map((e: FormatedSelections | {}) => {
+        if ("value" in e && typeof calendars === "object") {
+          return { label: e.value, value: calendars[e.value] || "" };
+        }
+        return {};
+      }),
+      selections
+    );
+    // console.log("calendarEvents", calendarEvents);
+    setCalendarEvents(calendarEventsRes);
+    dispatch({ type: ACTION_TYPES.LOADING, payload: { loading: false } });
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, [selections]);
+
   const handleSubmit = async () => {
     const selectedItems = ref.current?.getSelection() || [];
     setShowModal(false);
     setSelections(selectedItems);
-    const calendarEvents = await getSelectedCalendarEvents(
-      selectedItems.map((e: FormatedSelections | {}) => {
-        if ("value" in e && typeof calendars === "object") {
-          return calendars[e.value] || "";
-        }
-        return "";
-      }),
-      selectedItems
-    );
-    console.log("calendarEvents", calendarEvents);
   };
 
   console.log("selecti", selections);
+  console.log("calendars", calendars);
 
   return (
     <>
@@ -49,7 +76,10 @@ function Index(props: Props) {
         + add
       </button>
       {/* </div> */}
-      <Table />
+      <CalendarEventsList
+        fetchEvents={fetchEvents}
+        calendarEvents={calendarEvents}
+      />
       <Modal isOpen={showModal} onClose={handlecloseModal}>
         <CascadingMenu
           selectedItems={selections}
