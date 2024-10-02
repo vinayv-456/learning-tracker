@@ -2,6 +2,8 @@ import { FormatedSelections } from "react-cascading-menu/build/types";
 import { CalendarItem, EventItem } from "../types";
 import { endPoints } from "./endpoints";
 import WebService from "./webservice";
+import { parseEventPayload } from "../components/EventForm/utility";
+import { Obj } from "../appContext";
 
 export const fetchCalendarList = async () => {
   try {
@@ -22,39 +24,29 @@ export const fetchCalendarList = async () => {
 };
 
 export async function getSelectedCalendarEvents(
-  calendarList: string[],
+  calendarList: { label?: string; value?: string }[],
   selections: (FormatedSelections | {})[]
 ) {
   // Map calendar requests to promises
   const eventRequests = Promise.all(
     calendarList.map(async (calendar, index) => {
+      const { label: calendarLabel, value: calendarValue } = calendar;
       const selection = selections[index];
-      if (typeof selection === "object" && "label" in selection) {
+      if (
+        typeof selection === "object" &&
+        "label" in selection &&
+        calendarValue
+      ) {
         const endpoint = endPoints.listEventsInCalendar.replace(
           "{{calendar}}",
-          calendar
+          calendarValue
         );
         const eventsResponse = await WebService.get(endpoint);
         const events = eventsResponse.data?.value;
 
-        return events.map((event: EventItem) => {
-          const {
-            subject,
-            body,
-            start,
-            end,
-            bodyPreview,
-            location: { displayName },
-          } = event;
-          return {
-            subject: subject,
-            bodyPreview: bodyPreview,
-            body: body,
-            displayName,
-            start: start,
-            end: end,
-          };
-        });
+        return events.map((event: EventItem) =>
+          parseEventPayload(event, calendarLabel || "")
+        );
       }
       return {};
     }, {})
