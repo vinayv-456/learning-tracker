@@ -7,14 +7,12 @@ interface GraphConfig {
   listEvents: string;
 }
 
+const selectCols = "id, subject, start, end, bodyPreview, location";
+
 export const endPoints: GraphConfig = {
   listCalendars: `${baseEndPoint}/calendars`,
   listEvents: `${baseEndPoint}/calendar/events`,
-  listEventsInCalendar: `${baseEndPoint}/calendars/{{calendar}}/events`,
-  // $filter = startwith
-  // ?$filter=start/dateTime ge '2024-09-01T00:00:00Z' and end/dateTime le '2024-09-30T23:59:59Z'
-  // $top=10
-  // $orderby= subject desc
+  listEventsInCalendar: `${baseEndPoint}/calendars/{{calendar}}/events?$select=${selectCols}`,
   addEventInCalendar: `${baseEndPoint}/calendars/{{calendar_id}}/events`,
   editEventInCalendar: `${baseEndPoint}/calendars/{{calendar_id}}/events/{{event_id}}`,
 };

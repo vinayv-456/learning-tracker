@@ -10,6 +10,7 @@ import { eventsHeader } from "../../constants";
 import { Router, useNavigate } from "react-router-dom";
 import Modal from "../Modal";
 import EditEventForm from "../../containers/EditEventForm/EditEventForm.view";
+import moment from "moment";
 
 interface Props {
   calendarEvents: ParsedEventListEntries;
@@ -22,6 +23,7 @@ const initEventDetails = {
   timeSpent: "",
   description: "",
   calendar: "",
+  location: "",
   eventId: "",
 };
 
@@ -60,14 +62,24 @@ function CalendarEventsList(props: Props) {
               ))}
             </tr>
             {/* table rows    */}
-            {events.map((e) => {
+            {events.map((e: ParsedEventItem) => {
               return (
                 <tr>
-                  {eventsHeader.map((headerItem: EventsHeaderItem) => (
-                    <>
-                      <td>{e?.[headerItem.value]}</td>
-                    </>
-                  ))}
+                  {eventsHeader.map((headerItem: EventsHeaderItem) => {
+                    const col = headerItem.value;
+                    const colType = headerItem.type;
+                    console.log("col", colType);
+
+                    return (
+                      <>
+                        <td>
+                          {colType === "date"
+                            ? moment(e[col]).format("DD-MM-YYYY")
+                            : e[col]}
+                        </td>
+                      </>
+                    );
+                  })}
                   <td onClick={() => handleEventEdit(e)}>edit</td>
                 </tr>
               );
