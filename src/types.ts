@@ -41,6 +41,7 @@ export interface ParsedEventItem {
   timeSpent: string;
   description: string;
   calendar: string;
+  location: string;
   eventId?: string;
 }
 
@@ -50,7 +51,14 @@ export interface ParsedEventListEntries {
 
 export interface EventsHeaderItem {
   label: string;
-  value: "title" | "start" | "timeSpent" | "description" | "calendar";
+  value:
+    | "title"
+    | "start"
+    | "timeSpent"
+    | "description"
+    | "calendar"
+    | "location";
+  type?: string;
 }
 
 export interface Duration {
@@ -65,4 +73,12 @@ export interface formPayload {
   satisfaction: Number;
   selections: string[][] | undefined;
   calendars: string[];
+}
+
+export interface QueryParams {
+  startDate?: string;
+  endDate?: string;
+  top?: number;
+  sortBy?: string;
+  orderby?: string;
 }
