@@ -18,8 +18,6 @@ const TimeInput: React.FC<Props> = (props) => {
   const isDurationInit = useRef(false);
   useEffect(() => {
     if (duration && !isDurationInit.current) {
-      console.log("durat", duration);
-
       setHours(duration.hours.toString());
       setMinutes(duration.minutes.toString());
       isDurationInit.current = true;

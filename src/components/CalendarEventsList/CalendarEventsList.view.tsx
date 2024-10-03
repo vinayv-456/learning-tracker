@@ -68,8 +68,6 @@ function CalendarEventsList(props: Props) {
                   {eventsHeader.map((headerItem: EventsHeaderItem) => {
                     const col = headerItem.value;
                     const colType = headerItem.type;
-                    console.log("col", colType);
-
                     return (
                       <>
                         <td>

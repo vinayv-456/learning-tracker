@@ -6,6 +6,7 @@ import {
   ParsedEventListEntries,
 } from "../../types";
 import moment from "moment";
+import { mvpSelectedProps } from "react-cascading-menu/build/src/types";
 
 interface EventRawPayload {
   duration: Duration;
@@ -81,4 +82,47 @@ export const formatEventPayload = (eventPayload: EventRawPayload) => {
     },
     isAllDay: true,
   };
+};
+
+export const groupByEvents = (
+  events: ParsedEventListEntries,
+  leafNodes: mvpSelectedProps[][] | undefined
+): ParsedEventListEntries => {
+  let groupedEvents = {};
+  const allLeafs = leafNodes?.map((e) => e[e.length - 1]?.label);
+  // console.log("allLeafs", allLeafs);
+
+  if (events && allLeafs?.length) {
+    groupedEvents = Object.values(events).reduce(
+      (acc: ParsedEventListEntries, calendarEvents) => {
+        // console.log("calendarEvents", calendarEvents);
+
+        // grouping the current calendar events
+        const res = allLeafs.reduce(
+          (acc2: ParsedEventListEntries, leaf: string) => {
+            // topic-wise(leaf) grouping for the all current events
+            let obj = acc2?.[leaf] || [];
+            const newEvents = calendarEvents.filter((e) =>
+              e.location.includes(leaf)
+            );
+            // console.log("new events", newEvents, "leaf", leaf);
+
+            return {
+              ...acc2,
+              [leaf]: [...obj, ...newEvents],
+            };
+          },
+          {}
+        );
+        // console.log("current callender additions", res);
+
+        return {
+          ...acc,
+          ...res,
+        };
+      },
+      {}
+    );
+  }
+  return groupedEvents;
 };

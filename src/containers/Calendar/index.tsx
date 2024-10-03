@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Table from "../../components/Table/Table";
 import Modal from "../../components/Modal";
-import CascadingMenu, { CascadingMenuRef } from "react-cascading-menu";
+import CascadingMenu from "react-cascading-menu";
+import { CascadingMenuRef } from "react-cascading-menu/build/src";
 import { menuGroup } from "../../data";
 import { FormatedSelections } from "react-cascading-menu/build/types";
 import { getSelectedCalendarEvents } from "../../apiService/calendarApis";
@@ -19,28 +20,31 @@ import {
 } from "../../types";
 import Dropdown from "../../components/Dropdown";
 import { eventsHeader } from "../../constants";
+import { groupByEvents } from "../../components/EventForm/utility";
 interface Props {}
 
 function Index(props: Props) {
   const {} = props;
   const [isListView, setIsListView] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [selections, setSelections] = useState<(FormatedSelections | {})[]>([]);
   // const [leaf, setLeaf];
   const { calendars } = useGlobalState();
   const [calendarEvents, setCalendarEvents] = useState<ParsedEventListEntries>(
     {}
   );
   const ref = useRef<CascadingMenuRef>(null);
+  const savedRef = useRef<CascadingMenuRef | null>(null);
   const [startDate, setStartDate] = useState<string>();
   const [endDate, setEndDate] = useState<string>();
   const [sortBy, setSortBy] = useState<string>();
   const dispatch = useGlobalDispatch();
+  const [groupBy, setGroupBy] = useState("topic");
 
   const handlecloseModal = () => {
     setShowModal(false);
   };
   const fetchEvents = async () => {
+    const selections = savedRef.current?.getSelection() || [];
     dispatch({ type: ACTION_TYPES.LOADING, payload: { loading: true } });
     // const leafItems = ref.current?.getAllItemsSelected();
     // console.log("leafItems===1", leafItems, ref.current?.getSelection());
@@ -59,24 +63,21 @@ function Index(props: Props) {
         top: 1000,
         orderby: "start/dateTime",
       }
-      // leafItems
     );
+    // groupby events: topic
+    const res = groupByEvents(calendarEventsRes, savedRef.current?.leafNodes);
     // console.log("calendarEvents", calendarEvents);
-    setCalendarEvents(calendarEventsRes);
+    setCalendarEvents(res);
     dispatch({ type: ACTION_TYPES.LOADING, payload: { loading: false } });
   };
 
-  useEffect(() => {
-    fetchEvents();
-  }, [selections]);
-
   const handleSubmit = async () => {
-    const selectedItems = ref.current?.getSelection() || [];
+    // need an extra ref as the CascadingMenuRef gets null after the modal is closed
+    savedRef.current = ref.current;
     setShowModal(false);
-    setSelections(selectedItems);
+    fetchEvents();
   };
 
-  console.log("selecti", selections);
   console.log("calendars", calendars);
 
   const renderItem = (item: EventsHeaderItem, searchVal: string) => {
@@ -134,13 +135,12 @@ function Index(props: Props) {
         fetchEvents={fetchEvents}
         calendarEvents={calendarEvents}
       />
-      \
+
       <Modal isOpen={showModal} onClose={handlecloseModal}>
         <CascadingMenu
-          selectedItems={selections}
+          selectedItems={savedRef.current?.getSelection()}
           ref={ref}
           menuGroup={menuGroup}
-          renderItem={renderItem}
         />
         <button onClick={handleSubmit}>submit</button>
       </Modal>
