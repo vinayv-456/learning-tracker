@@ -1,5 +1,10 @@
 import { FormatedSelections } from "react-cascading-menu/build/types";
-import { Duration, EventItem } from "../../types";
+import {
+  Duration,
+  EventItem,
+  ParsedEventItem,
+  ParsedEventListEntries,
+} from "../../types";
 import moment from "moment";
 
 interface EventRawPayload {
@@ -17,7 +22,7 @@ export const extractHrs = (str: string) => {
 };
 
 export const parseEventPayload = (event: EventItem, calendar: string) => {
-  console.log("event", event);
+  // console.log("event", event);
 
   const {
     id,
@@ -35,7 +40,7 @@ export const parseEventPayload = (event: EventItem, calendar: string) => {
     title: subject,
     timeSpent: hrs,
     description: bodyPreview,
-    displayName,
+    location: displayName,
     start: startDateTime,
     end: endDateTime,
     calendar,
@@ -45,15 +50,18 @@ export const parseEventPayload = (event: EventItem, calendar: string) => {
 export const formatEventPayload = (eventPayload: EventRawPayload) => {
   const { duration, selectedDate, description, satisfaction, selections } =
     eventPayload;
+  const hrs = `${duration.hours + duration.minutes / 60}hr`;
   // TODO: frame the proper title
   const topic = selections?.reduce((acc: string, e: string[]) => {
     if (e.length > 1) {
-      return acc ? `${acc}_${e[1]}_${e?.[2] || ""}` : `${e[1]}_${e?.[2] || ""}`;
+      return acc
+        ? `${acc}_${e[1]}_${hrs}_${e?.[2] || ""}`
+        : `${e[1]}_${hrs}_${e?.[2] || ""}`;
     }
     return acc;
   }, "");
   return {
-    subject: `${topic}_${duration.hours + duration.minutes / 60}hr`,
+    subject: topic,
     body: {
       contentType: "HTML",
       content: description,
