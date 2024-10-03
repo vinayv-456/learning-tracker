@@ -35,7 +35,7 @@ export const SignIn = () => {
           hours spent, aiding users in tracking their learning activities
           efficiently.
         </div>
-        <div onClick={() => handleLogin("popup")}>Sign in</div>
+        <button onClick={() => handleLogin("popup")}>Sign in</button>
       </div>
     </div>
   );

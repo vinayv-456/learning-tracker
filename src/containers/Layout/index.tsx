@@ -8,14 +8,21 @@ function Layout(props: Props) {
   const {} = props;
   return (
     <div>
-      <span>layout</span>
       <SignOutButton />
-      <div>
-        <Link to="/">profile</Link>
-        <Link to="/calendar">calendar</Link>
-        <Link to="/add-event">add event</Link>
+      <ul>
+        <li>
+          <Link to="/">profile</Link>
+        </li>
+        <li>
+          <Link to="/calendar">calendar</Link>
+        </li>
+        <li>
+          <Link to="/add-event">add event</Link>
+        </li>
+      </ul>
+      <div className="mt-9">
+        <Outlet />
       </div>
-      <Outlet />
     </div>
   );
 }

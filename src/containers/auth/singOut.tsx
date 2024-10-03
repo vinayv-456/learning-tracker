@@ -23,11 +23,11 @@ export const SignOutButton = () => {
   };
 
   return (
-    <div className="ml-auto" title="Sign Out">
-      <div onClick={() => handleLogout("popup")}>Sign out</div>
-      {/* <div onClick={() => handleLogout("redirect")}>
+    <div className="p-3 ml-4" title="Sign Out">
+      <button onClick={() => handleLogout("popup")}>Sign out</button>
+      {/* <button onClick={() => handleLogout("redirect")}>
         Sign out using Redirect
-      </div> */}
+      </button> */}
     </div>
   );
 };
