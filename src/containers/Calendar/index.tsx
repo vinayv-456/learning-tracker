@@ -16,6 +16,7 @@ import {
   EventItem,
   EventListEntries,
   EventsHeaderItem,
+  GroupStats,
   ParsedEventListEntries,
 } from "../../types";
 import Dropdown from "../../components/Dropdown";
@@ -32,6 +33,7 @@ function Index(props: Props) {
   const [calendarEvents, setCalendarEvents] = useState<ParsedEventListEntries>(
     {}
   );
+  const [groupedStats, setGroupedStats] = useState<GroupStats>({});
   const ref = useRef<CascadingMenuRef>(null);
   const savedRef = useRef<CascadingMenuRef | null>(null);
   const [startDate, setStartDate] = useState<string>();
@@ -65,9 +67,13 @@ function Index(props: Props) {
       }
     );
     // groupby events: topic
-    const res = groupByEvents(calendarEventsRes, savedRef.current?.leafNodes);
+    const [groupedEvents, gs] = groupByEvents(
+      calendarEventsRes,
+      savedRef.current?.leafNodes
+    );
     // console.log("calendarEvents", calendarEvents);
-    setCalendarEvents(res);
+    setCalendarEvents(groupedEvents);
+    setGroupedStats(gs);
     dispatch({ type: ACTION_TYPES.LOADING, payload: { loading: false } });
   };
 
@@ -134,6 +140,7 @@ function Index(props: Props) {
       <CalendarEventsList
         fetchEvents={fetchEvents}
         calendarEvents={calendarEvents}
+        groupedStats={groupedStats}
       />
 
       <Modal isOpen={showModal} onClose={handlecloseModal}>

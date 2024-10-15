@@ -82,3 +82,12 @@ export interface QueryParams {
   sortBy?: string;
   orderby?: string;
 }
+
+export interface GroupStats {
+  [key: string]: StatsObj;
+}
+export interface StatsObj {
+  hours?: number;
+  days?: number;
+  events?: number;
+}

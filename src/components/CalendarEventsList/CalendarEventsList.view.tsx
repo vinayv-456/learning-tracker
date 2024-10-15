@@ -3,17 +3,21 @@ import {
   EventItem,
   EventListEntries,
   EventsHeaderItem,
+  GroupStats,
   ParsedEventItem,
   ParsedEventListEntries,
+  StatsObj,
 } from "../../types";
 import { eventsHeader } from "../../constants";
 import { Router, useNavigate } from "react-router-dom";
 import Modal from "../Modal";
 import EditEventForm from "../../containers/EditEventForm/EditEventForm.view";
 import moment from "moment";
+import { groupByEvents } from "../EventForm/utility";
 
 interface Props {
   calendarEvents: ParsedEventListEntries;
+  groupedStats: GroupStats;
   fetchEvents: () => void;
 }
 
@@ -28,7 +32,7 @@ const initEventDetails = {
 };
 
 function CalendarEventsList(props: Props) {
-  const { calendarEvents = {}, fetchEvents } = props;
+  const { calendarEvents = {}, groupedStats, fetchEvents } = props;
   // const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [activeEvent, setActiveEvent] =
@@ -49,42 +53,54 @@ function CalendarEventsList(props: Props) {
 
   return (
     <div>
-      {Object.values(calendarEvents).map((events: ParsedEventItem[]) => {
-        // const {} = e;
+      {Object.entries(groupedStats).map((entry) => {
+        const [groupName, stats] = entry;
+        const { hours, days, events } = stats;
         return (
-          <table>
-            {/* table header */}
-            <tr>
-              {eventsHeader.map((e) => (
-                <>
-                  <th>{e.label}</th>
-                </>
-              ))}
-            </tr>
-            {/* table rows    */}
-            {events.map((e: ParsedEventItem) => {
-              return (
+          <div>
+            <span>{`group: ${groupName}`}</span>
+            <div>
+              <span>{`hours: ${hours}`}</span>
+              <span>{`Days: ${days}`}</span>
+              <span>{`Events: ${events}`}</span>
+            </div>
+            <>
+              <table>
+                {/* table header */}
                 <tr>
-                  {eventsHeader.map((headerItem: EventsHeaderItem) => {
-                    const col = headerItem.value;
-                    const colType = headerItem.type;
-                    return (
-                      <>
-                        <td>
-                          {colType === "date"
-                            ? moment(e[col]).format("DD-MM-YYYY")
-                            : e[col]}
-                        </td>
-                      </>
-                    );
-                  })}
-                  <td onClick={() => handleEventEdit(e)}>edit</td>
+                  {eventsHeader.map((e) => (
+                    <>
+                      <th>{e.label}</th>
+                    </>
+                  ))}
                 </tr>
-              );
-            })}
-          </table>
+                {/* table rows    */}
+                {calendarEvents[groupName].map((e: ParsedEventItem) => {
+                  return (
+                    <tr>
+                      {eventsHeader.map((headerItem: EventsHeaderItem) => {
+                        const col = headerItem.value;
+                        const colType = headerItem.type;
+                        return (
+                          <>
+                            <td>
+                              {colType === "date"
+                                ? moment(e[col]).format("DD-MM-YYYY")
+                                : e[col]}
+                            </td>
+                          </>
+                        );
+                      })}
+                      <td onClick={() => handleEventEdit(e)}>edit</td>
+                    </tr>
+                  );
+                })}
+              </table>
+            </>
+          </div>
         );
       })}
+
       <Modal isOpen={showModal} onClose={handlecloseModal}>
         <EditEventForm
           eventDetails={activeEvent}
