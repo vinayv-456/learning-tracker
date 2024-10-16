@@ -22,6 +22,7 @@ import {
 import Dropdown from "../../components/Dropdown";
 import { eventsHeader } from "../../constants";
 import { groupByEvents } from "../../components/EventForm/utility";
+import LineChart from "../../components/Charts/LineChart.view";
 interface Props {}
 
 function Index(props: Props) {
@@ -142,7 +143,7 @@ function Index(props: Props) {
         calendarEvents={calendarEvents}
         groupedStats={groupedStats}
       />
-
+      <LineChart />
       <Modal isOpen={showModal} onClose={handlecloseModal}>
         <CascadingMenu
           selectedItems={savedRef.current?.getSelection()}
