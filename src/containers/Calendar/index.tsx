@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import Table from "../../components/Table/Table";
 import Modal from "../../components/Modal";
 import CascadingMenu from "react-cascading-menu";
 import { CascadingMenuRef } from "react-cascading-menu/build/src";
@@ -11,7 +10,6 @@ import {
   useGlobalDispatch,
   useGlobalState,
 } from "../../appContext";
-import CalendarEventsList from "../../components/CalendarEventsList/CalendarEventsList.view";
 import {
   EventItem,
   EventListEntries,
@@ -22,7 +20,7 @@ import {
 import Dropdown from "../../components/Dropdown";
 import { eventsHeader } from "../../constants";
 import { groupByEvents } from "../../components/EventForm/utility";
-import LineChart from "../../components/Charts/LineChart.view";
+import TopicCard from "../../components/TopicCard/TopicCard.view";
 interface Props {}
 
 function Index(props: Props) {
@@ -85,7 +83,8 @@ function Index(props: Props) {
     fetchEvents();
   };
 
-  console.log("calendars", calendars);
+  // console.log("calendars", calendars);
+  // console.log("calendarEvents", calendarEvents, groupedStats);
 
   const renderItem = (item: EventsHeaderItem, searchVal: string) => {
     return item.label;
@@ -137,12 +136,12 @@ function Index(props: Props) {
         handleSearchChange={() => {}}
         renderItem={renderItem}
       />
-      {/* search */}
-      <CalendarEventsList
+      <TopicCard
         fetchEvents={fetchEvents}
         calendarEvents={calendarEvents}
         groupedStats={groupedStats}
       />
+
       <Modal isOpen={showModal} onClose={handlecloseModal}>
         <CascadingMenu
           selectedItems={savedRef.current?.getSelection()}

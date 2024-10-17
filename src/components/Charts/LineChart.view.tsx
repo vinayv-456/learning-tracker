@@ -1,6 +1,5 @@
 import React, { Component, useMemo } from "react";
 import Chart from "react-apexcharts";
-import { data } from "../../data";
 import { ParsedEventItem } from "../../types";
 
 interface Props {
@@ -20,22 +19,32 @@ const LineChart = (props: Props) => {
   console.log("newData", newData);
 
   return (
-    <div className="line">
-      <Chart
-        options={{
-          stroke: { curve: "straight" },
-          chart: { type: "line" },
-          xaxis: { type: "datetime" },
-        }}
-        series={[
+    <Chart
+      options={{
+        stroke: { curve: "straight" },
+        chart: { type: "line" },
+        xaxis: { type: "datetime" },
+        responsive: [
           {
-            data: newData,
+            breakpoint: 768,
+            options: {
+              chart: {
+                width: "100%",
+                heigth: "250",
+              },
+            },
           },
-        ]}
-        type="line"
-        width="500"
-      />
-    </div>
+        ],
+      }}
+      series={[
+        {
+          data: newData,
+        },
+      ]}
+      type="line"
+      width="500"
+      height="200"
+    />
   );
 };
 export default LineChart;
