@@ -1,11 +1,12 @@
 {
   "name": "learning-tracker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --mode production --entry ./src/index.tsx --output-path ./build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@azure/msal-browser": "^3.10.0",
@@ -43,6 +44,7 @@
     "autoprefixer": "^10.4.20",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.10.0",
+    "html-webpack-plugin": "^5.6.2",
     "postcss-loader": "^8.1.1",
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",

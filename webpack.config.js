@@ -1,5 +1,6 @@
 const path = require("path");
 const Dotenv = require("dotenv-webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   // mode: "development", // 'production' or 'development'
@@ -46,5 +47,10 @@ module.exports = {
       },
     ],
   },
-  plugins: [new Dotenv()],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+      inject: "body", // This injects the script tags in the body of the HTML
+    }),
+  ],
 };
