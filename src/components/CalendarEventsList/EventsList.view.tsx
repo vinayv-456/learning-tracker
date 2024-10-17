@@ -1,19 +1,17 @@
 import React, { useState } from "react";
+import { eventsHeader } from "../../constants";
 import {
-  EventItem,
-  EventListEntries,
   EventsHeaderItem,
   ParsedEventItem,
   ParsedEventListEntries,
 } from "../../types";
-import { eventsHeader } from "../../constants";
-import { Router, useNavigate } from "react-router-dom";
+import moment from "moment";
 import Modal from "../Modal";
 import EditEventForm from "../../containers/EditEventForm/EditEventForm.view";
-import moment from "moment";
+import { CollapsibleContainer } from "./EventsList.style";
 
 interface Props {
-  calendarEvents: ParsedEventListEntries;
+  events: ParsedEventItem[];
   fetchEvents: () => void;
 }
 
@@ -27,12 +25,13 @@ const initEventDetails = {
   eventId: "",
 };
 
-function CalendarEventsList(props: Props) {
-  const { calendarEvents = {}, fetchEvents } = props;
-  // const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+function EventsList(props: Props) {
+  const { events, fetchEvents } = props;
+  const [isClosed, setIsClosed] = useState(true);
   const [activeEvent, setActiveEvent] =
     useState<ParsedEventItem>(initEventDetails);
+  const [showModal, setShowModal] = useState(false);
+
   const handleEventEdit = (details: ParsedEventItem) => {
     setActiveEvent(details);
     setShowModal(true);
@@ -40,7 +39,6 @@ function CalendarEventsList(props: Props) {
   const handlecloseModal = () => {
     setShowModal(false);
   };
-
   const onEventSubmission = () => {
     fetchEvents();
     setActiveEvent(initEventDetails);
@@ -48,10 +46,16 @@ function CalendarEventsList(props: Props) {
   };
 
   return (
-    <div>
-      {Object.values(calendarEvents).map((events: ParsedEventItem[]) => {
-        // const {} = e;
-        return (
+    <>
+      <CollapsibleContainer>
+        <div
+          onClick={() => {
+            setIsClosed((prev) => !prev);
+          }}
+        >
+          Event List
+        </div>
+        {!isClosed && (
           <table>
             {/* table header */}
             <tr>
@@ -83,16 +87,16 @@ function CalendarEventsList(props: Props) {
               );
             })}
           </table>
-        );
-      })}
+        )}
+      </CollapsibleContainer>
       <Modal isOpen={showModal} onClose={handlecloseModal}>
         <EditEventForm
           eventDetails={activeEvent}
           onSubmit={onEventSubmission}
         />
       </Modal>
-    </div>
+    </>
   );
 }
 
-export default CalendarEventsList;
+export default EventsList;

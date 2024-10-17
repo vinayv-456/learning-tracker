@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import Table from "../../components/Table/Table";
 import Modal from "../../components/Modal";
 import CascadingMenu from "react-cascading-menu";
 import { CascadingMenuRef } from "react-cascading-menu/build/src";
@@ -11,16 +10,17 @@ import {
   useGlobalDispatch,
   useGlobalState,
 } from "../../appContext";
-import CalendarEventsList from "../../components/CalendarEventsList/CalendarEventsList.view";
 import {
   EventItem,
   EventListEntries,
   EventsHeaderItem,
+  GroupStats,
   ParsedEventListEntries,
 } from "../../types";
 import Dropdown from "../../components/Dropdown";
 import { eventsHeader } from "../../constants";
 import { groupByEvents } from "../../components/EventForm/utility";
+import TopicCard from "../../components/TopicCard/TopicCard.view";
 interface Props {}
 
 function Index(props: Props) {
@@ -32,6 +32,7 @@ function Index(props: Props) {
   const [calendarEvents, setCalendarEvents] = useState<ParsedEventListEntries>(
     {}
   );
+  const [groupedStats, setGroupedStats] = useState<GroupStats>({});
   const ref = useRef<CascadingMenuRef>(null);
   const savedRef = useRef<CascadingMenuRef | null>(null);
   const [startDate, setStartDate] = useState<string>();
@@ -65,9 +66,13 @@ function Index(props: Props) {
       }
     );
     // groupby events: topic
-    const res = groupByEvents(calendarEventsRes, savedRef.current?.leafNodes);
+    const [groupedEvents, gs] = groupByEvents(
+      calendarEventsRes,
+      savedRef.current?.leafNodes
+    );
     // console.log("calendarEvents", calendarEvents);
-    setCalendarEvents(res);
+    setCalendarEvents(groupedEvents);
+    setGroupedStats(gs);
     dispatch({ type: ACTION_TYPES.LOADING, payload: { loading: false } });
   };
 
@@ -78,7 +83,8 @@ function Index(props: Props) {
     fetchEvents();
   };
 
-  console.log("calendars", calendars);
+  // console.log("calendars", calendars);
+  // console.log("calendarEvents", calendarEvents, groupedStats);
 
   const renderItem = (item: EventsHeaderItem, searchVal: string) => {
     return item.label;
@@ -130,10 +136,10 @@ function Index(props: Props) {
         handleSearchChange={() => {}}
         renderItem={renderItem}
       />
-      {/* search */}
-      <CalendarEventsList
+      <TopicCard
         fetchEvents={fetchEvents}
         calendarEvents={calendarEvents}
+        groupedStats={groupedStats}
       />
 
       <Modal isOpen={showModal} onClose={handlecloseModal}>

@@ -7,7 +7,7 @@ interface Props {}
 function Layout(props: Props) {
   const {} = props;
   return (
-    <div>
+    <div style={{ background: "#E5E7EB", height: "100%" }}>
       <SignOutButton />
       <ul>
         <li>

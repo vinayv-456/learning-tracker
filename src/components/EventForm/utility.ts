@@ -2,6 +2,7 @@ import { FormatedSelections } from "react-cascading-menu/build/types";
 import {
   Duration,
   EventItem,
+  GroupStats,
   ParsedEventItem,
   ParsedEventListEntries,
 } from "../../types";
@@ -87,8 +88,9 @@ export const formatEventPayload = (eventPayload: EventRawPayload) => {
 export const groupByEvents = (
   events: ParsedEventListEntries,
   leafNodes: mvpSelectedProps[][] | undefined
-): ParsedEventListEntries => {
+): [ParsedEventListEntries, GroupStats] => {
   let groupedEvents = {};
+  let groupedStats: GroupStats = {};
   const allLeafs = leafNodes?.map((e) => e[e.length - 1]?.label);
   // console.log("allLeafs", allLeafs);
 
@@ -102,9 +104,18 @@ export const groupByEvents = (
           (acc2: ParsedEventListEntries, leaf: string) => {
             // topic-wise(leaf) grouping for the all current events
             let obj = acc2?.[leaf] || [];
-            const newEvents = calendarEvents.filter((e) =>
-              e.location.includes(leaf)
-            );
+            const newEvents = calendarEvents.filter((e) => {
+              const isValid = e.location.includes(leaf);
+              if (isValid) {
+                groupedStats[leaf] = {
+                  hours:
+                    (groupedStats[leaf]?.hours || 0) + parseInt(e.timeSpent),
+                  days: (groupedStats[leaf]?.days || 0) + 1,
+                  events: (groupedStats[leaf]?.events || 0) + 1,
+                };
+              }
+              return isValid;
+            });
             // console.log("new events", newEvents, "leaf", leaf);
 
             return {
@@ -124,5 +135,5 @@ export const groupByEvents = (
       {}
     );
   }
-  return groupedEvents;
+  return [groupedEvents, groupedStats];
 };
