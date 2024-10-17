@@ -14,6 +14,8 @@ import Modal from "../Modal";
 import EditEventForm from "../../containers/EditEventForm/EditEventForm.view";
 import moment from "moment";
 import { groupByEvents } from "../EventForm/utility";
+import LineChart from "../Charts/LineChart.view";
+import Heatmap from "../Charts/Heatmap.view";
 
 interface Props {
   calendarEvents: ParsedEventListEntries;
@@ -64,6 +66,8 @@ function CalendarEventsList(props: Props) {
               <span>{`Days: ${days}`}</span>
               <span>{`Events: ${events}`}</span>
             </div>
+            <LineChart events={calendarEvents[groupName]} />
+            <Heatmap events={calendarEvents[groupName]} />
             <>
               <table>
                 {/* table header */}

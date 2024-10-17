@@ -143,7 +143,6 @@ function Index(props: Props) {
         calendarEvents={calendarEvents}
         groupedStats={groupedStats}
       />
-      <LineChart />
       <Modal isOpen={showModal} onClose={handlecloseModal}>
         <CascadingMenu
           selectedItems={savedRef.current?.getSelection()}

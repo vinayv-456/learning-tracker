@@ -1,25 +1,21 @@
 import React, { Component, useMemo } from "react";
 import Chart from "react-apexcharts";
 import { data } from "../../data";
+import { ParsedEventItem } from "../../types";
 
-interface Props {}
+interface Props {
+  events: ParsedEventItem[];
+}
 
-const LineChart = () => {
-  const state = {
-    series: [
-      {
-        data: data,
-      },
-    ],
-  };
-
+const LineChart = (props: Props) => {
+  const { events } = props;
   const newData = useMemo(() => {
-    const seriesData = data.map((e) => ({
+    const seriesData = events.map((e) => ({
       x: new Date(e.start).getTime(), // Use timestamp for x-axis
       y: e.timeSpent, // Use time spent for y-axis
     }));
     return seriesData;
-  }, []);
+  }, [events]);
 
   console.log("newData", newData);
 
@@ -27,7 +23,7 @@ const LineChart = () => {
     <div className="line">
       <Chart
         options={{
-          stroke: { curve: "smooth" },
+          stroke: { curve: "straight" },
           chart: { type: "line" },
           xaxis: { type: "datetime" },
         }}

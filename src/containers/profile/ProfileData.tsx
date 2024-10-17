@@ -8,6 +8,7 @@ import WebService from "../../apiService/webservice";
 import { baseEndPoint, endPoints } from "../../apiService/endpoints";
 import { ProfileDataType } from "../../types";
 import LineChart from "../../components/Charts/LineChart.view";
+import Heatmap from "../../components/Charts/Heatmap.view";
 
 export const ProfileContent = () => {
   const { instance, accounts } = useMsal();
@@ -33,7 +34,8 @@ export const ProfileContent = () => {
           Request Profile Information
         </button>
       )}
-      <LineChart />
+      {/* <Heatmap /> */}
+      {/* <LineChart /> */}
     </>
   );
 };
