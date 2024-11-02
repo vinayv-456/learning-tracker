@@ -1,7 +1,7 @@
 const path = require("path");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   // mode: "development", // 'production' or 'development'
@@ -16,7 +16,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
-    publicPath: "/",
+    publicPath: "./",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
@@ -50,6 +50,9 @@ module.exports = {
   },
   plugins: [
     new Dotenv(),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(process.env),
+    }),
     new HtmlWebpackPlugin({
       template: "./public/index.html", // Use the existing index.html as a template
       filename: "index.html", // Output in build folder
