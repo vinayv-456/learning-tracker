@@ -1,6 +1,7 @@
 const path = require("path");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   // mode: "development", // 'production' or 'development'
@@ -13,7 +14,7 @@ module.exports = {
     port: 8080, // Specify the port to listen on
   },
   output: {
-    path: path.resolve(__dirname, "public"),
+    path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
     publicPath: "/",
   },
@@ -48,9 +49,10 @@ module.exports = {
     ],
   },
   plugins: [
+    new Dotenv(),
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      inject: "body", // This injects the script tags in the body of the HTML
+      template: "./public/index.html", // Use the existing index.html as a template
+      filename: "index.html", // Output in build folder
     }),
   ],
 };
